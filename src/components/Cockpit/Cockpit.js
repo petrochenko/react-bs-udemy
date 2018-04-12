@@ -1,5 +1,8 @@
 import React from 'react';
-import styles from './Cockpit.css'
+
+import styles from './Cockpit.css';
+import Aux from '../../hoc/Auxx';
+
 
 const cockpit = (props) => {
   let classes = [];
@@ -16,12 +19,12 @@ const cockpit = (props) => {
   }
 
   return (
-    <div>
+    <Aux>
       <h1>Hi, I'm React App</h1>
       <p className={classes.join(' ')}>This is really working!</p>
       <button className={btnClass}
               onClick={props.toggle}>{props.showPerson ? 'Hide Persons' : 'Show persons'}</button>
-    </div>
+    </Aux>
   );
 };
 
