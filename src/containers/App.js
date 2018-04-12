@@ -2,7 +2,8 @@ import React, {PureComponent} from 'react';
 import styles from './App.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
-import WithClass from '../hoc/WithClass/WithClass';
+import Aux from '../hoc/Auxiliary/Auxiliary';
+import withClass from '../hoc/withClass';
 
 class App extends PureComponent {
   constructor(props) {
@@ -35,13 +36,14 @@ class App extends PureComponent {
 
   state = {
     persons: [
-      {id: 'fdsfds', name: 'Sergey', age: 32},
+      {id: 'fdsfds', name: 'Sergey', age: 33},
       {id: 'fdsfs', name: 'Alex', age: 25},
       {id: 'efdsds', name: 'Felix', age: 18}
     ],
     user: {
       name: 'Sergey'
-    }
+    },
+    toggleClicked: 0,
   };
 
   nameChangedHandler = (event, id) => {
@@ -58,7 +60,12 @@ class App extends PureComponent {
 
   togglePersonsHendler = () => {
     const doesShow = this.state.showPersons;
-    this.setState({showPersons: !doesShow});
+    this.setState((prevState) => {
+      return {
+        showPersons: !doesShow,
+        toggleClicked: prevState.toggleClicked + 1
+      }
+    });
   };
 
   deletePersonHandler = (personIndex) => {
@@ -83,7 +90,7 @@ class App extends PureComponent {
     }
 
     return (
-      <WithClass classes={styles.App}>
+      <Aux>
         <button onClick={() => {this.setState({showPersons: true})}}>Show persons</button>
         <Cockpit
           persons={this.state.persons}
@@ -91,9 +98,9 @@ class App extends PureComponent {
           toggle={this.togglePersonsHendler}
         />
         {persons}
-      </WithClass>
+      </Aux>
     );
   }
 }
 
-export default App;
+export default withClass(App, styles.App);
