@@ -5,18 +5,25 @@ import Cockpit from '../components/Cockpit/Cockpit';
 import Aux from '../hoc/Auxiliary/Auxiliary';
 import withClass from '../hoc/withClass';
 
+export const AuthContext = React.createContext(false);
+
 class App extends PureComponent {
   constructor(props) {
     super(props);
     console.log('[App.js Inside Constructor]', props);
   }
-
+  // changed
   componentWillMount() {
     console.log('[App.js Inside componentWillMount()]');
   }
 
   componentDidMount() {
     console.log('[App.js Inside componentDidMount()]');
+  }
+
+  // changed
+  componentWillReceiveProps(nextProps) {
+    console.log('[UPDATE App.js Inside componentWillReceiveProps()]', nextProps);
   }
 
   // shouldComponentUpdate(nextProps, nexState) {
@@ -26,8 +33,23 @@ class App extends PureComponent {
   //   // return true;
   // }
 
+  // changed
   componentWillUpdate(nextProps, nexState) {
     console.log('[UPDATE App.js Inside componentWillUpdate()]', nextProps, nexState);
+  }
+
+  // new
+  static getDerivedStateFromProps(nextProps, prevState) {
+    console.log('[UPDATE App.js Inside getDerivedStateFromProps()]',
+      nextProps,
+      prevState);
+
+    // should return new state
+    return prevState
+  }
+
+  getSnapshotBeforeUpdate() {
+    console.log('[UPDATE App.js Inside getSnapshotBeforeUpdate()]');
   }
 
   componentDidUpdate() {
@@ -44,6 +66,7 @@ class App extends PureComponent {
       name: 'Sergey'
     },
     toggleClicked: 0,
+    authenticated: false
   };
 
   nameChangedHandler = (event, id) => {
@@ -74,6 +97,10 @@ class App extends PureComponent {
     this.setState({persons});
   };
 
+  loginHandler = () => {
+    this.setState({authenticated: true});
+  };
+
   render() {
     console.log('[App.js Inside render()]');
     let persons = null;
@@ -96,8 +123,12 @@ class App extends PureComponent {
           persons={this.state.persons}
           showPerson={this.state.showPersons}
           toggle={this.togglePersonsHendler}
+          login={this.loginHandler}
         />
-        {persons}
+        <AuthContext.Provider value={this.state.authenticated}>
+          {persons}
+        </AuthContext.Provider>
+
       </Aux>
     );
   }
